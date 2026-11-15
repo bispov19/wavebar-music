@@ -362,3 +362,57 @@
 .wavebar-music-theme-light .wavebar-music-control.wavebar-music-toggle:checked StIcon {
     color: -st-accent-color;
 }
+
+/* ---------- Volume ----------
+ * Slider do próprio GNOME (classe .slider do tema) com as cores do card:
+ * trilho como a parte restante da onda, preenchimento na cor de destaque e
+ * puxador na cor do botão de play. Definimos todas as cores para o card
+ * ficar certo mesmo quando o tema do card difere do tema do sistema.
+ */
+
+.wavebar-music-volume {
+    spacing: 8px;
+}
+
+.wavebar-music-volume-icon StIcon {
+    icon-size: 16px;
+}
+
+.wavebar-music-volume-slider {
+    color: #ffffff;                                           /* puxador */
+    -barlevel-height: 4px;
+    -barlevel-background-color: rgba(255, 255, 255, 0.22);
+    -barlevel-active-background-color: -st-accent-color;
+    -barlevel-overdrive-color: #c01c28;                       /* acima de 100% */
+    -barlevel-overdrive-separator-width: 1px;
+    -slider-handle-radius: 7px;
+}
+
+.wavebar-music-volume-slider:hover {
+    color: #ffffff;
+    -barlevel-background-color: rgba(255, 255, 255, 0.32);
+}
+
+.wavebar-music-theme-light .wavebar-music-volume-slider {
+    color: #1c1c20;
+    -barlevel-background-color: rgba(0, 0, 0, 0.16);
+    -barlevel-overdrive-color: #e01b24;
+}
+
+.wavebar-music-theme-light .wavebar-music-volume-slider:hover {
+    color: #1c1c20;
+    -barlevel-background-color: rgba(0, 0, 0, 0.26);
+}
+
+/* Largura fixa para "100%": o slider não muda de tamanho quando ela aparece */
+.wavebar-music-volume-percent {
+    width: 3em;
+    text-align: right;
+    font-size: 0.8em;
+    font-feature-settings: "tnum";
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.wavebar-music-theme-light .wavebar-music-volume-percent {
+    color: rgba(0, 0, 0, 0.55);
+}

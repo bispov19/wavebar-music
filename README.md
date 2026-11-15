@@ -7,6 +7,7 @@ Controle de mídia universal para o painel do GNOME Shell 51.
 - **Clique esquerdo** no ícone: pausa o que estiver tocando, em qualquer player (se houver vários tocando, pausa todos). Se nada estiver tocando, retoma o último player usado.
 - **Clique direito** no ícone (ou Enter/Espaço com o ícone focado): abre o card com a capa, o título, o artista, o player, a **letra com rolagem automática**, a **onda de progresso** (clique ou arraste para pular) e os controles.
 - Botões **Aleatório** (à esquerda) e **Repetir** (à direita) no card. O Repetir alterna entre não repetir, repetir a lista e repetir a música. Ligados, ficam na cor de destaque. Aparecem quando o player oferece a opção: Spotify, Deezer e VLC têm; navegadores não. Se o player só oferece um dos dois, o outro lado fica vazio para o play/pause continuar centralizado.
+- **Controle de volume** logo abaixo dos controles: ajusta o volume do sistema (o mesmo do painel do GNOME) e acompanha as teclas de volume. Clique no ícone para silenciar/ativar; a porcentagem aparece enquanto você ajusta.
 - **Tema claro e escuro**, com integração ao **Blur my Shell**.
 - Com vários players, use as setas ao lado do nome do player para alternar. Clicar no nome traz a janela do player para a frente.
 
@@ -117,6 +118,7 @@ lib/appearance.js     tema claro/escuro + integração com o Blur my Shell
 lib/panelIndicator.js botão do painel + ícone de equalizador (Cairo + Clutter.Timeline)
 lib/playerCard.js     card vertical (capa, info, letra, onda, controles)
 lib/waveform.js       onda de progresso com seek (Cairo + Clutter.PanGesture)
+lib/volumeControl.js  linha de volume do sistema (Slider do Shell + Gvc, mixer compartilhado)
 lib/coverArt.js       capas file:// / data: / http(s) → arquivo local
 lib/lyrics.js         cliente LRCLIB (Soup 3) com cache
 lib/lrc.js, util.js   funções puras (testáveis com gjs)

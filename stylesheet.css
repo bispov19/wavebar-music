@@ -363,7 +363,7 @@
     color: -st-accent-color;
 }
 
-/* ---------- Volume ----------
+/* ---------- Volume (do app que está tocando) ----------
  * Slider do próprio GNOME (classe .slider do tema) com as cores do card:
  * trilho como a parte restante da onda, preenchimento na cor de destaque e
  * puxador na cor do botão de play. Definimos todas as cores para o card
@@ -402,6 +402,19 @@
 .wavebar-music-theme-light .wavebar-music-volume-slider:hover {
     color: #1c1c20;
     -barlevel-background-color: rgba(0, 0, 0, 0.26);
+}
+
+/* App sem áudio aberto no momento (ex.: navegador pausado): apagado */
+.wavebar-music-volume-slider:insensitive {
+    color: rgba(255, 255, 255, 0.45);
+    -barlevel-background-color: rgba(255, 255, 255, 0.14);
+    -barlevel-active-background-color: rgba(255, 255, 255, 0.3);
+}
+
+.wavebar-music-theme-light .wavebar-music-volume-slider:insensitive {
+    color: rgba(0, 0, 0, 0.35);
+    -barlevel-background-color: rgba(0, 0, 0, 0.1);
+    -barlevel-active-background-color: rgba(0, 0, 0, 0.25);
 }
 
 /* Largura fixa para "100%": o slider não muda de tamanho quando ela aparece */

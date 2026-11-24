@@ -8,6 +8,7 @@ import System from 'system';
 import {formatTime, generateWaveform, hashString} from '../lib/util.js';
 import {LruMap} from '../lib/cache.js';
 import * as appStreamsTests from './appStreamsTests.js';
+import * as colorTests from './colorTests.js';
 import * as lrcTests from './lrcTests.js';
 
 let failures = 0, passed = 0;
@@ -74,6 +75,7 @@ test('LruMap descarta o item usado há mais tempo', () => {
 
 lrcTests.register({test, assert, assertEqual});
 appStreamsTests.register({test, assert, assertEqual});
+colorTests.register({test, assert, assertEqual});
 
 print(`${passed} ok, ${failures} falha(s)`);
 System.exit(failures ? 1 : 0);

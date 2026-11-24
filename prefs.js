@@ -7,7 +7,8 @@
 // (o app "Extensões"). Por isso usa Gtk/Adw, e não St/Clutter. As opções vão
 // para o GSettings; a extensão escuta "changed" e aplica na hora.
 //
-// Páginas: "Geral" (ícone no painel, aparência, Blur my Shell, cache) e "Sobre mim".
+// Páginas: "Geral" (ícone no painel, contorno de progresso, aparência, Blur my
+// Shell, cache) e "Sobre mim".
 
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
@@ -39,6 +40,10 @@ const BMS_UUID = 'blur-my-shell@aunetx';
 const PANEL_MODES = [
     ['compact', 'Compacto'],
     ['expanded', 'Expandido'],
+];
+const RING_THICKNESS = [
+    ['thin', 'Fina'],
+    ['medium', 'Média'],
 ];
 const THEMES = [
     ['auto', 'Automático'],
@@ -151,6 +156,7 @@ export default class WavebarMusicPreferences extends ExtensionPreferences {
             icon_name: 'preferences-system-symbolic',
         });
         general.add(this._panelGroup(settings));
+        general.add(this._progressGroup(settings));
         general.add(this._appearanceGroup(settings));
         general.add(this._blurGroup(settings));
         general.add(this._cacheGroup());
@@ -227,6 +233,40 @@ export default class WavebarMusicPreferences extends ExtensionPreferences {
         settings.connect('changed::panel-mode', syncSensitive);
         settings.connect('changed::expand-on-track-change', syncSensitive);
 
+        return group;
+    }
+
+    _progressGroup(settings) {
+        const group = new Adw.PreferencesGroup({
+            title: 'Contorno de progresso',
+            description: 'Um traço em volta da pílula acompanha o tempo da música, ' +
+                'começando e terminando no topo. Some em transmissões ao vivo.',
+        });
+
+        const show = new Adw.SwitchRow({title: 'Mostrar contorno de progresso'});
+        settings.bind('show-progress-ring', show, 'active', Gio.SettingsBindFlags.DEFAULT);
+        group.add(show);
+
+        const dynamic = new Adw.SwitchRow({
+            title: 'Cor pela capa do álbum',
+            subtitle: 'Desligado (ou sem capa), usa a cor de destaque do sistema',
+        });
+        settings.bind('progress-ring-dynamic-color', dynamic, 'active', Gio.SettingsBindFlags.DEFAULT);
+        group.add(dynamic);
+
+        const thickness = choiceRow(settings, 'progress-ring-thickness', 'Espessura', RING_THICKNESS);
+        group.add(thickness);
+
+        const syncSensitive = () => {
+            const on = settings.get_boolean('show-panel-indicator') &&
+                settings.get_boolean('show-progress-ring');
+            show.sensitive = settings.get_boolean('show-panel-indicator');
+            dynamic.sensitive = on;
+            thickness.sensitive = on;
+        };
+        syncSensitive();
+        settings.connect('changed::show-panel-indicator', syncSensitive);
+        settings.connect('changed::show-progress-ring', syncSensitive);
         return group;
     }
 

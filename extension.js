@@ -8,6 +8,8 @@
 //   pillDetails.js    → capa + título com rolagem (marquee) da pílula expandida
 //   playerCard.js     → card vertical aberto pelo botão
 //   coverArt.js       → capas (file://, data:, http) com cache em disco
+//   progressRing.js   → contorno de progresso em volta da pílula
+//   coverColor.js / color.js → cor dominante da capa (para o contorno)
 //   lyrics.js / lrc.js → letras do LRCLIB (sincronizadas ou não)
 //   appearance.js     → tema claro/escuro e integração com o Blur my Shell
 
@@ -21,6 +23,7 @@ import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 import {Appearance} from './lib/appearance.js';
 import {lookupPlayerApp} from './lib/appLookup.js';
 import {CoverArtLoader} from './lib/coverArt.js';
+import {CoverColorExtractor} from './lib/coverColor.js';
 import {LyricsClient} from './lib/lyrics.js';
 import {MprisManager} from './lib/mpris.js';
 import {WavebarMusicIndicator} from './lib/panelIndicator.js';
@@ -45,6 +48,7 @@ export default class WavebarMusicExtension extends Extension {
             lyrics: new LyricsClient(this._session, cacheDir),
             appearance: new Appearance(this._settings),
         };
+        this._services.coverColors = new CoverColorExtractor(this._services.covers);
 
         this._manager = new MprisManager(lookupPlayerApp);
         this._indicator = null;
@@ -145,6 +149,7 @@ export default class WavebarMusicExtension extends Extension {
         this._manager?.destroy();
         this._manager = null;
 
+        this._services?.coverColors.destroy();
         this._services?.covers.destroy();
         this._services?.lyrics.destroy();
         this._services?.appearance.destroy();

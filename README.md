@@ -5,6 +5,7 @@ Controle de mídia universal para o painel do GNOME Shell 51.
 - Funciona com **qualquer player MPRIS**. Foi testada com Spotify, Deezer, YouTube Music Desktop, Firefox, Brave, Vivaldi (e outros navegadores Chromium) e VLC.
 - Ícone em forma de **pílula com 3 barrinhas** que animam enquanto algo toca. Ele só aparece quando há um player ativo.
 - Dois **modos de exibição** do ícone: **compacto** (só as barrinhas) e **expandido** (capa redonda + título e artista + barrinhas; fundo neutro, com a cor de destaque só nas barrinhas e no anel da capa). Títulos longos deslizam devagar e suavemente, com pausa no início e no fim e esmaecimento nas bordas. Pausado, capa e título ficam apagados. No compacto, a pílula pode expandir ao passar o mouse ou por alguns segundos ao trocar de faixa.
+- **Contorno de progresso** em volta da pílula: começa no topo e dá a volta acompanhando o tempo da música, na **cor dominante da capa** (com transição suave entre faixas) e um brilho discreto. Some em transmissões ao vivo.
 - Opção de **ocultar o ícone do painel superior** (para quem usa o wavebar-music-pill na Orla Dock).
 - **Clique esquerdo** no ícone: pausa o que estiver tocando, em qualquer player (se houver vários tocando, pausa todos). Se nada estiver tocando, retoma o último player usado.
 - **Clique direito** no ícone (ou Enter/Espaço com o ícone focado): abre o card com a capa, o título, o artista, o player, a **letra com rolagem automática**, a **onda de progresso** (clique ou arraste para pular) e os controles.
@@ -48,6 +49,16 @@ gnome-extensions prefs wavebar-music@vinicius
 | **Rolagem automática do título longo** | Rola o texto que não cabe (só com a música tocando). Desligada, só esmaece a borda. |
 
 Tudo vale na hora, sem desativar a extensão. A rolagem e as transições respeitam a opção "Animações" da acessibilidade.
+
+## Contorno de progresso
+
+| Opção | O que faz |
+|---|---|
+| **Mostrar contorno de progresso** | Traço em volta da pílula (compacta ou expandida) que começa no topo, no centro, e fecha no mesmo ponto quando a música termina. Por baixo, um trilho translúcido mostra o caminho inteiro. Sem duração (rádio/ao vivo) ou se o player não informa a posição, o contorno some. |
+| **Cor pela capa do álbum** | Usa a cor dominante da capa (calculada uma vez por faixa, sem travar o Shell) no traço e num brilho discreto em volta. Desligada, sem capa ou capa em preto e branco: cor de destaque do sistema. A cor é ajustada para ter contraste com o painel. |
+| **Espessura** | Fina (2 px) ou média (3 px). |
+
+O avanço é contínuo: a posição é amostrada a cada 0,5 s só enquanto toca (e relida do player a cada ~3 s) e o traço é extrapolado entre amostras, redesenhando só quando anda ¼ de pixel (≈8 vezes por segundo numa música de 4 min). Seek e troca de faixa animam o traço até a nova posição; pausado, nada roda.
 
 ## Aparência
 
@@ -133,6 +144,9 @@ lib/appLookup.js      descobre o app (.desktop) de cada player
 lib/appearance.js     tema claro/escuro + integração com o Blur my Shell
 lib/panelIndicator.js botão do painel: pílula compacta/expandida + ícone de equalizador (Cairo + Clutter.Timeline)
 lib/pillDetails.js    capa redonda + título com rolagem (marquee) da pílula expandida
+lib/progressRing.js   contorno de progresso em volta da pílula (Cairo, interpolado por quadro)
+lib/coverColor.js     cor dominante da capa (GdkPixbuf assíncrono, 24×24, com cache)
+lib/color.js          funções puras de cor: dominante, contraste, mistura (testáveis com gjs)
 lib/playerCard.js     card vertical (capa, info, letra, onda, controles)
 lib/waveform.js       onda de progresso com seek (Cairo + Clutter.PanGesture)
 lib/volumeControl.js  linha de volume do app (Slider do Shell + Gvc, mixer compartilhado)

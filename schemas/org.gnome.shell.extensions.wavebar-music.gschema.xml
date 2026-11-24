@@ -64,5 +64,24 @@
       <summary>Rolagem automática do título longo</summary>
       <description>Títulos que não cabem rolam devagar de um lado para o outro (só com a música tocando).</description>
     </key>
+    <key name="show-progress-ring" type="b">
+      <default>true</default>
+      <summary>Contorno de progresso em volta da pílula</summary>
+      <description>Um traço em volta da pílula do painel acompanha o tempo da música (escondido em transmissões ao vivo, sem duração).</description>
+    </key>
+    <key name="progress-ring-dynamic-color" type="b">
+      <default>true</default>
+      <summary>Cor do contorno pela capa</summary>
+      <description>Usa a cor dominante da capa do álbum; desligado (ou sem capa), usa a cor de destaque do sistema.</description>
+    </key>
+    <key name="progress-ring-thickness" type="s">
+      <choices>
+        <choice value="thin"/>
+        <choice value="medium"/>
+      </choices>
+      <default>'thin'</default>
+      <summary>Espessura do contorno</summary>
+      <description>thin: 2 px; medium: 3 px.</description>
+    </key>
   </schema>
 </schemalist>

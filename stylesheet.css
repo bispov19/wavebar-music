@@ -52,6 +52,18 @@
     opacity: 0.8;
 }
 
+/* ---------- Contorno de progresso (progressRing.js) ----------
+ * A cor do traço é a dominante da capa; esta é a de reserva (sem capa ou com
+ * a cor dinâmica desligada). A margem abre espaço para o brilho em volta
+ * da pílula — só existe com o contorno ligado. */
+.wavebar-music-panel-pill-ring {
+    color: -st-accent-color;
+}
+
+.wavebar-music-panel-pill.wavebar-music-with-ring {
+    margin: 3px;
+}
+
 /* ---------- Pílula expandida: capa + título ---------- */
 
 .wavebar-music-panel-pill-details {

@@ -7,12 +7,16 @@
  * .wavebar-music-theme-light (classe posta no fundo do menu pelo panelIndicator.js).
  */
 
-/* ---------- Botão do painel ---------- */
+/* ---------- Botão do painel ----------
+ * Prefixo .wavebar-music-panel-pill (e não .wavebar-music-pill): a Orla Dock
+ * usa .wavebar-music-pill-* no widget dela, e as folhas de estilo do Shell são
+ * globais — com o mesmo nome, as regras de uma vazariam para a outra.
+ */
 
 /* Altura fixa (22px) nos dois modos: a capa de 20px cabe com 1px de folga
  * e a pílula não muda de altura ao expandir. O espaço à ESQUERDA é um ator
  * (panelIndicator.js) porque ele encolhe junto com a animação. */
-.wavebar-music-pill {
+.wavebar-music-panel-pill {
     border-radius: 999px;
     height: 22px;
     padding: 0 9px 0 0;
@@ -21,9 +25,20 @@
     transition-duration: 200ms;
 }
 
-.wavebar-music-pill.wavebar-music-paused {
+.wavebar-music-panel-pill.wavebar-music-paused {
     /* Cinza neutro: funciona no painel escuro e no transparente do Blur my Shell */
     background-color: rgba(127, 127, 127, 0.28);
+}
+
+/* Expandida: o azul (destaque) fica só nas barrinhas e no anel da capa; o
+   fundo é neutro, como o do pausado. Vem depois do .wavebar-music-paused
+   (mesma especificidade): vale também com a música pausada. */
+.wavebar-music-panel-pill.wavebar-music-expanded {
+    background-color: rgba(127, 127, 127, 0.2);
+}
+
+.wavebar-music-expanded .wavebar-music-equalizer {
+    color: -st-accent-color;
 }
 
 /* A cor das barrinhas é herdada do texto do painel (ex.: o Blur my Shell
@@ -39,33 +54,31 @@
 
 /* ---------- Pílula expandida: capa + título ---------- */
 
-.wavebar-music-pill-details {
+.wavebar-music-panel-pill-details {
     spacing: 7px;
     padding-right: 8px;   /* respiro entre o texto e as barrinhas */
 }
 
-.wavebar-music-pill-cover {
-    width: 20px;
-    height: 20px;
+/* Capa com anel na cor de destaque. No St a borda soma POR FORA da largura:
+   16px + 2 × 2px de anel = 20px de diâmetro (px inteiros: sem arredondar). */
+.wavebar-music-panel-pill-cover {
+    width: 16px;
+    height: 16px;
     border-radius: 10px;
+    border: 2px solid -st-accent-color;
     background-size: cover;
 }
 
-/* Sem capa: círculo neutro com nota musical (cor do texto do painel) */
-.wavebar-music-pill-cover.wavebar-music-no-cover {
-    background-color: rgba(127, 127, 127, 0.4);
+/* Sem capa: círculo na cor de destaque com nota musical */
+.wavebar-music-panel-pill-cover.wavebar-music-no-cover {
+    background-color: st-transparentize(-st-accent-color, 0.55);
 }
 
-.wavebar-music-pill-cover-icon {
+.wavebar-music-panel-pill-cover-icon {
     icon-size: 12px;
 }
 
-/* Rolagem horizontal sem barra; o fade esmaece só a borda com texto escondido */
-.wavebar-music-pill-text {
-    -st-hfade-offset: 14px;
-}
-
-.wavebar-music-pill-label {
+.wavebar-music-panel-pill-label {
     font-size: 0.9em;
 }
 

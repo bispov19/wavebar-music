@@ -4,7 +4,7 @@ Controle de mídia universal para o painel do GNOME Shell 51.
 
 - Funciona com **qualquer player MPRIS**. Foi testada com Spotify, Deezer, YouTube Music Desktop, Firefox, Brave, Vivaldi (e outros navegadores Chromium) e VLC.
 - Ícone em forma de **pílula com 3 barrinhas** que animam enquanto algo toca. Ele só aparece quando há um player ativo.
-- Dois **modos de exibição** do ícone: **compacto** (só as barrinhas) e **expandido** (capa redonda + título e artista + barrinhas). Títulos longos rolam devagar, com pausa no início e no fim e esmaecimento nas bordas. Pausado, capa e título ficam apagados. No compacto, a pílula pode expandir ao passar o mouse ou por alguns segundos ao trocar de faixa.
+- Dois **modos de exibição** do ícone: **compacto** (só as barrinhas) e **expandido** (capa redonda + título e artista + barrinhas; fundo neutro, com a cor de destaque só nas barrinhas e no anel da capa). Títulos longos deslizam devagar e suavemente, com pausa no início e no fim e esmaecimento nas bordas. Pausado, capa e título ficam apagados. No compacto, a pílula pode expandir ao passar o mouse ou por alguns segundos ao trocar de faixa.
 - Opção de **ocultar o ícone do painel superior** (para quem usa o wavebar-music-pill na Orla Dock).
 - **Clique esquerdo** no ícone: pausa o que estiver tocando, em qualquer player (se houver vários tocando, pausa todos). Se nada estiver tocando, retoma o último player usado.
 - **Clique direito** no ícone (ou Enter/Espaço com o ícone focado): abre o card com a capa, o título, o artista, o player, a **letra com rolagem automática**, a **onda de progresso** (clique ou arraste para pular) e os controles.

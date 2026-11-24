@@ -72,7 +72,7 @@
     <key name="progress-ring-dynamic-color" type="b">
       <default>true</default>
       <summary>Cor do contorno pela capa</summary>
-      <description>Usa a cor dominante da capa do álbum; desligado (ou sem capa), usa a cor de destaque do sistema.</description>
+      <description>Usa a cor dominante da capa do álbum (muda a cada faixa). Desligado, sem capa ou capa sem cor: a mesma cor de destaque das barrinhas.</description>
     </key>
     <key name="progress-ring-thickness" type="s">
       <choices>

@@ -249,7 +249,8 @@ export default class WavebarMusicPreferences extends ExtensionPreferences {
 
         const dynamic = new Adw.SwitchRow({
             title: 'Cor pela capa do álbum',
-            subtitle: 'Desligado (ou sem capa), usa a cor de destaque do sistema',
+            subtitle: 'A cor muda a cada faixa, conforme a capa. Desligado (ou sem capa), ' +
+                'usa o mesmo azul (cor de destaque) das barrinhas',
         });
         settings.bind('progress-ring-dynamic-color', dynamic, 'active', Gio.SettingsBindFlags.DEFAULT);
         group.add(dynamic);

@@ -7,7 +7,7 @@
 // (o app "Extensões"). Por isso usa Gtk/Adw, e não St/Clutter. As opções vão
 // para o GSettings; a extensão escuta "changed" e aplica na hora.
 //
-// Páginas: "Geral" (aparência, Blur my Shell, cache) e "Sobre mim".
+// Páginas: "Geral" (ícone no painel, aparência, Blur my Shell, cache) e "Sobre mim".
 
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
@@ -36,6 +36,10 @@ const PROJECTS = [
 ];
 
 const BMS_UUID = 'blur-my-shell@aunetx';
+const PANEL_MODES = [
+    ['compact', 'Compacto'],
+    ['expanded', 'Expandido'],
+];
 const THEMES = [
     ['auto', 'Automático'],
     ['dark', 'Escuro'],
@@ -68,6 +72,62 @@ function readBlurMyShell() {
     return {installed: false};
 }
 
+// ComboRow ligada a uma chave de texto com <choices> (lista de [id, rótulo]).
+function choiceRow(settings, key, title, choices, subtitle = null) {
+    const row = new Adw.ComboRow({
+        title,
+        subtitle,
+        model: Gtk.StringList.new(choices.map(([, label]) => label)),
+    });
+    const sync = () => {
+        const index = choices.findIndex(([id]) => id === settings.get_string(key));
+        row.selected = Math.max(0, index);
+    };
+    sync();
+    settings.connect(`changed::${key}`, sync);
+    row.connect('notify::selected', () => {
+        const id = choices[row.selected]?.[0] ?? choices[0][0];
+        if (settings.get_string(key) !== id)
+            settings.set_string(key, id);
+    });
+    return row;
+}
+
+// Linha com um slider (Gtk.Scale) ligado a uma chave inteira. O valor é
+// gravado arredondado a cada movimento: a extensão aplica ao vivo.
+function sliderRow(settings, key, title, {min, max, step, unit}) {
+    const row = new Adw.ActionRow({title});
+    const adjustment = new Gtk.Adjustment({
+        lower: min,
+        upper: max,
+        step_increment: step,
+        page_increment: step * 2,
+        value: settings.get_int(key),
+    });
+    const scale = new Gtk.Scale({
+        adjustment,
+        digits: 0,
+        round_digits: 0,
+        draw_value: true,
+        value_pos: Gtk.PositionType.RIGHT,
+        hexpand: true,
+        width_request: 220,
+        valign: Gtk.Align.CENTER,
+    });
+    scale.set_format_value_func((_scale, value) => `${Math.round(value)} ${unit}`);
+    adjustment.connect('value-changed', () => {
+        const value = Math.round(adjustment.value);
+        if (settings.get_int(key) !== value)
+            settings.set_int(key, value);
+    });
+    settings.connect(`changed::${key}`, () => {
+        if (Math.round(adjustment.value) !== settings.get_int(key))
+            adjustment.value = settings.get_int(key);
+    });
+    row.add_suffix(scale);
+    return row;
+}
+
 // Abre um link no navegador padrão (Gtk.UriLauncher é a API atual do GTK 4).
 function openUri(widget, uri) {
     new Gtk.UriLauncher({uri}).launch(widget.get_root(), null, null);
@@ -84,12 +144,13 @@ function linkRow(title, subtitle, uri) {
 export default class WavebarMusicPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         const settings = this.getSettings();
-        window.set_default_size(580, 700);
+        window.set_default_size(600, 780);
 
         const general = new Adw.PreferencesPage({
             title: 'Geral',
             icon_name: 'preferences-system-symbolic',
         });
+        general.add(this._panelGroup(settings));
         general.add(this._appearanceGroup(settings));
         general.add(this._blurGroup(settings));
         general.add(this._cacheGroup());
@@ -100,6 +161,75 @@ export default class WavebarMusicPreferences extends ExtensionPreferences {
 
     // ---------- Geral ----------
 
+    _panelGroup(settings) {
+        const group = new Adw.PreferencesGroup({
+            title: 'Ícone no painel',
+            description: 'Compacto mostra só as barrinhas; expandido mostra também a capa, ' +
+                'o título e o artista. Sem nenhum player, o ícone some como antes.',
+        });
+
+        const show = new Adw.SwitchRow({
+            title: 'Mostrar indicador no painel superior',
+            subtitle: 'Útil se você usa o wavebar-music-pill na Orla Dock. ' +
+                'Desligado, o card também não abre pelo painel.',
+        });
+        settings.bind('show-panel-indicator', show, 'active', Gio.SettingsBindFlags.DEFAULT);
+        group.add(show);
+
+        const mode = choiceRow(settings, 'panel-mode', 'Modo de exibição', PANEL_MODES);
+        group.add(mode);
+        const maxWidth = sliderRow(settings, 'expanded-max-width', 'Largura máxima da pílula expandida',
+            {min: 140, max: 320, step: 10, unit: 'px'});
+        group.add(maxWidth);
+
+        const hover = new Adw.SwitchRow({
+            title: 'Expandir ao passar o mouse',
+            subtitle: 'No modo compacto, mostra capa e título enquanto o mouse estiver no ícone',
+        });
+        settings.bind('expand-on-hover', hover, 'active', Gio.SettingsBindFlags.DEFAULT);
+        group.add(hover);
+
+        const trackChange = new Adw.SwitchRow({
+            title: 'Expandir ao trocar de faixa',
+            subtitle: 'No modo compacto, mostra a nova música por alguns segundos',
+        });
+        settings.bind('expand-on-track-change', trackChange, 'active', Gio.SettingsBindFlags.DEFAULT);
+        group.add(trackChange);
+
+        const duration = sliderRow(settings, 'track-change-duration',
+            'Duração da expansão ao trocar de faixa', {min: 2, max: 10, step: 1, unit: 's'});
+        group.add(duration);
+
+        const cover = new Adw.SwitchRow({title: 'Mostrar capa do álbum'});
+        settings.bind('show-cover', cover, 'active', Gio.SettingsBindFlags.DEFAULT);
+        group.add(cover);
+
+        const scroll = new Adw.SwitchRow({
+            title: 'Rolagem automática do título longo',
+            subtitle: 'Desligada, o título que não couber só é esmaecido na borda',
+        });
+        settings.bind('scroll-long-title', scroll, 'active', Gio.SettingsBindFlags.DEFAULT);
+        group.add(scroll);
+
+        // As opções de "expandir às vezes" só fazem sentido no modo compacto.
+        // Com o indicador oculto, nenhuma das outras opções tem efeito.
+        const syncSensitive = () => {
+            const shown = settings.get_boolean('show-panel-indicator');
+            const compact = settings.get_string('panel-mode') === 'compact';
+            for (const row of [mode, maxWidth, cover, scroll])
+                row.sensitive = shown;
+            hover.sensitive = shown && compact;
+            trackChange.sensitive = shown && compact;
+            duration.sensitive = shown && compact && settings.get_boolean('expand-on-track-change');
+        };
+        syncSensitive();
+        settings.connect('changed::show-panel-indicator', syncSensitive);
+        settings.connect('changed::panel-mode', syncSensitive);
+        settings.connect('changed::expand-on-track-change', syncSensitive);
+
+        return group;
+    }
+
     _appearanceGroup(settings) {
         const group = new Adw.PreferencesGroup({
             title: 'Aparência',
@@ -107,21 +237,7 @@ export default class WavebarMusicPreferences extends ExtensionPreferences {
                 'do GNOME. O ícone do painel sempre acompanha o painel.',
         });
 
-        const row = new Adw.ComboRow({
-            title: 'Tema do card',
-            model: Gtk.StringList.new(THEMES.map(([, label]) => label)),
-        });
-        const sync = () => {
-            const index = THEMES.findIndex(([id]) => id === settings.get_string('theme'));
-            row.selected = Math.max(0, index);
-        };
-        sync();
-        settings.connect('changed::theme', sync);
-        row.connect('notify::selected', () => {
-            const id = THEMES[row.selected]?.[0] ?? 'auto';
-            if (settings.get_string('theme') !== id)
-                settings.set_string('theme', id);
-        });
+        const row = choiceRow(settings, 'theme', 'Tema do card', THEMES);
         group.add(row);
         return group;
     }

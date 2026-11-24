@@ -7,3 +7,4 @@ build/
 .vscode/
 *.swp
 __pycache__/
+schemas/gschemas.compiled

@@ -18,5 +18,51 @@
       <summary>Integrar com o Blur my Shell</summary>
       <description>Usa o fundo desfocado, o estilo (claro/escuro) e o raio dos cantos configurados no Blur my Shell para menus.</description>
     </key>
+    <key name="show-panel-indicator" type="b">
+      <default>true</default>
+      <summary>Mostrar indicador no painel superior</summary>
+      <description>Desligado, a pílula some do painel superior (útil para quem usa o wavebar-music-pill na Orla Dock).</description>
+    </key>
+    <key name="panel-mode" type="s">
+      <choices>
+        <choice value="compact"/>
+        <choice value="expanded"/>
+      </choices>
+      <default>'compact'</default>
+      <summary>Modo do ícone no painel</summary>
+      <description>compact: só as barrinhas; expanded: capa, título e artista ao lado das barrinhas.</description>
+    </key>
+    <key name="expanded-max-width" type="i">
+      <range min="140" max="320"/>
+      <default>220</default>
+      <summary>Largura máxima da pílula expandida (px)</summary>
+      <description>Títulos maiores que isso rolam (ou são esmaecidos na borda).</description>
+    </key>
+    <key name="expand-on-hover" type="b">
+      <default>false</default>
+      <summary>Expandir ao passar o mouse</summary>
+      <description>No modo compacto, mostra capa e título enquanto o mouse estiver sobre o ícone.</description>
+    </key>
+    <key name="expand-on-track-change" type="b">
+      <default>false</default>
+      <summary>Expandir ao trocar de faixa</summary>
+      <description>No modo compacto, mostra capa e título por alguns segundos quando a música muda.</description>
+    </key>
+    <key name="track-change-duration" type="i">
+      <range min="2" max="10"/>
+      <default>4</default>
+      <summary>Duração da expansão ao trocar de faixa (s)</summary>
+      <description>Por quantos segundos a pílula fica expandida depois de uma troca de faixa.</description>
+    </key>
+    <key name="show-cover" type="b">
+      <default>true</default>
+      <summary>Mostrar capa do álbum na pílula</summary>
+      <description>Miniatura redonda da capa à esquerda do título.</description>
+    </key>
+    <key name="scroll-long-title" type="b">
+      <default>true</default>
+      <summary>Rolagem automática do título longo</summary>
+      <description>Títulos que não cabem rolam devagar de um lado para o outro (só com a música tocando).</description>
+    </key>
   </schema>
 </schemalist>

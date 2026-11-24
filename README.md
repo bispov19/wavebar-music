@@ -4,6 +4,8 @@ Controle de mídia universal para o painel do GNOME Shell 51.
 
 - Funciona com **qualquer player MPRIS**. Foi testada com Spotify, Deezer, YouTube Music Desktop, Firefox, Brave, Vivaldi (e outros navegadores Chromium) e VLC.
 - Ícone em forma de **pílula com 3 barrinhas** que animam enquanto algo toca. Ele só aparece quando há um player ativo.
+- Dois **modos de exibição** do ícone: **compacto** (só as barrinhas) e **expandido** (capa redonda + título e artista + barrinhas). Títulos longos rolam devagar, com pausa no início e no fim e esmaecimento nas bordas. Pausado, capa e título ficam apagados. No compacto, a pílula pode expandir ao passar o mouse ou por alguns segundos ao trocar de faixa.
+- Opção de **ocultar o ícone do painel superior** (para quem usa o wavebar-music-pill na Orla Dock).
 - **Clique esquerdo** no ícone: pausa o que estiver tocando, em qualquer player (se houver vários tocando, pausa todos). Se nada estiver tocando, retoma o último player usado.
 - **Clique direito** no ícone (ou Enter/Espaço com o ícone focado): abre o card com a capa, o título, o artista, o player, a **letra com rolagem automática**, a **onda de progresso** (clique ou arraste para pular) e os controles.
 - Botões **Aleatório** (à esquerda) e **Repetir** (à direita) no card. O Repetir alterna entre não repetir, repetir a lista e repetir a música. Ligados, ficam na cor de destaque. Aparecem quando o player oferece a opção: Spotify, Deezer e VLC têm; navegadores não. Se o player só oferece um dos dois, o outro lado fica vazio para o play/pause continuar centralizado.
@@ -27,11 +29,25 @@ No **Wayland** o Shell só carrega código novo de extensão depois de um **logo
 gnome-extensions enable wavebar-music@vinicius
 ```
 
-Preferências: app **Extensões** → Wavebar Music → ⚙. A janela tem duas páginas: **Geral** (tema, Blur my Shell, cache) e **Sobre mim** (o autor e os outros projetos dele). Também abre com:
+Preferências: app **Extensões** → Wavebar Music → ⚙. A janela tem duas páginas: **Geral** (ícone no painel, tema, Blur my Shell, cache) e **Sobre mim** (o autor e os outros projetos dele). Também abre com:
 
 ```bash
 gnome-extensions prefs wavebar-music@vinicius
 ```
+
+## Ícone no painel
+
+| Opção | O que faz |
+|---|---|
+| **Mostrar indicador no painel superior** | Desligado, a pílula sai do painel com uma transição (o indicador é destruído; volta ao mesmo lugar quando religada). O card abre pelo ícone, então ele também fica inacessível enquanto a opção estiver desligada. |
+| **Modo de exibição** | Compacto (só as barrinhas) ou Expandido (capa + título/artista + barrinhas). Sem faixa para mostrar, a pílula volta ao compacto. |
+| **Largura máxima da pílula expandida** | 140 a 320 px (padrão 220). O que passar disso rola ou é esmaecido na borda. |
+| **Expandir ao passar o mouse** | Só no compacto: expande enquanto o mouse estiver no ícone. |
+| **Expandir ao trocar de faixa** / **Duração** | Só no compacto: expande por 2 a 10 s (padrão 4) quando a música muda, com ela tocando. Trocas rápidas renovam o tempo. |
+| **Mostrar capa do álbum** | Capa redonda de 20 px. Sem capa, mostra um ícone de música neutro. |
+| **Rolagem automática do título longo** | Rola o texto que não cabe (só com a música tocando). Desligada, só esmaece a borda. |
+
+Tudo vale na hora, sem desativar a extensão. A rolagem e as transições respeitam a opção "Animações" da acessibilidade.
 
 ## Aparência
 
@@ -115,7 +131,8 @@ prefs.js              preferências: páginas "Geral" e "Sobre mim" (GTK 4 + lib
 lib/mpris.js          players MPRIS via D-Bus (sem dependência do Shell), repetição (LoopStatus) e aleatório (Shuffle)
 lib/appLookup.js      descobre o app (.desktop) de cada player
 lib/appearance.js     tema claro/escuro + integração com o Blur my Shell
-lib/panelIndicator.js botão do painel + ícone de equalizador (Cairo + Clutter.Timeline)
+lib/panelIndicator.js botão do painel: pílula compacta/expandida + ícone de equalizador (Cairo + Clutter.Timeline)
+lib/pillDetails.js    capa redonda + título com rolagem (marquee) da pílula expandida
 lib/playerCard.js     card vertical (capa, info, letra, onda, controles)
 lib/waveform.js       onda de progresso com seek (Cairo + Clutter.PanGesture)
 lib/volumeControl.js  linha de volume do app (Slider do Shell + Gvc, mixer compartilhado)

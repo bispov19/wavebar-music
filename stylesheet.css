@@ -9,9 +9,13 @@
 
 /* ---------- Botão do painel ---------- */
 
+/* Altura fixa (22px) nos dois modos: a capa de 20px cabe com 1px de folga
+ * e a pílula não muda de altura ao expandir. O espaço à ESQUERDA é um ator
+ * (panelIndicator.js) porque ele encolhe junto com a animação. */
 .wavebar-music-pill {
     border-radius: 999px;
-    padding: 4px 9px;
+    height: 22px;
+    padding: 0 9px 0 0;
     /* Cor de destaque do sistema, translúcida */
     background-color: st-transparentize(-st-accent-color, 0.45);
     transition-duration: 200ms;
@@ -31,6 +35,38 @@
 
 .wavebar-music-paused .wavebar-music-equalizer {
     opacity: 0.8;
+}
+
+/* ---------- Pílula expandida: capa + título ---------- */
+
+.wavebar-music-pill-details {
+    spacing: 7px;
+    padding-right: 8px;   /* respiro entre o texto e as barrinhas */
+}
+
+.wavebar-music-pill-cover {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background-size: cover;
+}
+
+/* Sem capa: círculo neutro com nota musical (cor do texto do painel) */
+.wavebar-music-pill-cover.wavebar-music-no-cover {
+    background-color: rgba(127, 127, 127, 0.4);
+}
+
+.wavebar-music-pill-cover-icon {
+    icon-size: 12px;
+}
+
+/* Rolagem horizontal sem barra; o fade esmaece só a borda com texto escondido */
+.wavebar-music-pill-text {
+    -st-hfade-offset: 14px;
+}
+
+.wavebar-music-pill-label {
+    font-size: 0.9em;
 }
 
 /* ---------- Fundo do card ----------

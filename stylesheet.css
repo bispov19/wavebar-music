@@ -95,12 +95,12 @@
 }
 
 /* ---------- Fundo do card ----------
- * Três situações:
- *  1. Blur my Shell ativo + tema automático: o fundo é o do BMS (não pintamos).
- *  2. Tema escolhido (ou sem BMS): pintamos o fundo. O BMS usa !important;
- *     usamos também, e os nossos seletores (3–4 classes) são mais
- *     específicos que os dele (2), então vencem quando o tema é forçado.
- *  3. Com desfoque por trás (.wavebar-music-over-blur), o nosso fundo fica translúcido.
+ * Pintamos SEMPRE o nosso fundo, quase sólido: nada atrás do card
+ * atravessa os controles, nem nos primeiros quadros da abertura (o
+ * desfoque do Blur my Shell pode chegar um quadro depois). O BMS usa
+ * !important; usamos também, e os nossos seletores (3–4 classes) são mais
+ * específicos que os dele (2). Com desfoque por trás
+ * (.wavebar-music-over-blur), o fundo fica só um pouco menos opaco.
  */
 
 .wavebar-music-menu-content {
@@ -119,11 +119,11 @@
 }
 
 .popup-menu-content.wavebar-music-menu-content.wavebar-music-bg-dark.wavebar-music-over-blur {
-    background-color: rgba(18, 18, 22, 0.5) !important;
+    background-color: rgba(18, 18, 22, 0.88) !important;
 }
 
 .popup-menu-content.wavebar-music-menu-content.wavebar-music-bg-light.wavebar-music-over-blur {
-    background-color: rgba(255, 255, 255, 0.55) !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
 }
 
 /* ---------- Card ---------- */
@@ -269,8 +269,13 @@
 
 /* ---------- Letras ---------- */
 
-.wavebar-music-lyrics {
+/* Altura FIXA: mensagem ("Carregando letra…") e letra ficam uma sobre a
+   outra (só a opacidade muda); o card nunca muda de tamanho por causa dela. */
+.wavebar-music-lyrics-area {
     height: 120px;
+}
+
+.wavebar-music-lyrics {
     -st-vfade-offset: 28px;   /* esmaece o topo e a base da rolagem */
 }
 
@@ -280,6 +285,7 @@
 }
 
 .wavebar-music-lyric-line {
+    transition-duration: 200ms;   /* a linha atual acende/apaga em crossfade */
     font-weight: 700;
     color: rgba(255, 255, 255, 0.35);
 }
